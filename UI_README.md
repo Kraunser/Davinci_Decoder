@@ -225,5 +225,6 @@ POST /api/auto-detect
 - ✅ Demo mode standalone
 - ✅ API REST documentada
 - ✅ Código limpo e organizado
+**Desenvolvido por: Matheus Bueno**
 
 **Status:** PRODUCTION READY 🚀

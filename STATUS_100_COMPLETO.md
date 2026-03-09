@@ -168,6 +168,7 @@ O **DaVinci Decoder** está **100% COMPLETO**!
 ---
 
 *Finalizado em: 2026-02-03*  
+*Desenvolvido por: Matheus Bueno*  
 *Versão: 1.0.0 FINAL RELEASE*  
 *Algoritmos: 102/101 (101%)*  
 *Status: ✅ PRODUCTION READY*

@@ -301,7 +301,7 @@ O sistema já é **extremamente poderoso**, mas pode ser expandido:
 
 **DaVinci Decoder** - Sistema Universal de Quebra de Cifras
 
-Desenvolvido com ❤️ por um sistema de IA avançado em colaboração com pesquisa criptográfica.
+Desenvolvido com ❤️ por **Matheus Bueno** em colaboração com pesquisa criptográfica.
 
 ---
 

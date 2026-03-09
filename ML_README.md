@@ -224,4 +224,6 @@ Após treinar, o sistema será capaz de:
 3. Integre no `decoder_manager.py`
 4. Teste com ciphertexts reais!
 
+**Desenvolvido por: Matheus Bueno**
+
 **Sistema agora é inteligente! 🧠**

@@ -314,6 +314,6 @@ Livre para uso educacional e pesquisa em criptoanálise.
 
 ---
 
-**Desenvolvido com ❤️ para decifradores e entusiastas de criptografia.**
+**Desenvolvido com ❤️ por Matheus Bueno para decifradores e entusiastas de criptografia.**
 
 🚀 **Versão 2.0** - Agora com 102 algoritmos e API REST completa!
