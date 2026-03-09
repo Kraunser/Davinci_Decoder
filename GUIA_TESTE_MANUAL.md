@@ -1,16 +1,16 @@
-# 🧪 Guia de Teste Manual - DaVinci Decoder
+# Guia de Teste Manual - DaVinci Decoder
 
-## ✅ Sistema Validado (Teste Automatizado)
+## Sistema Validado (Teste Automatizado)
 
 O teste end-to-end confirmou:
-- ✅ Backend: 102 algoritmos carregados
-- ✅ Auto-Detect: Funcional
-- ✅ Machine Learning: Modelo treinado
-- ✅ Estrutura de arquivos: Completa
+- Backend: 102 algoritmos carregados
+- Auto-Detect: Funcional
+- Machine Learning: Modelo treinado
+- Estrutura de arquivos: Completa
 
 ---
 
-## 🌐 Teste Manual da Interface Web
+## Teste Manual da Interface Web
 
 ### Passo 1: Verificar Servidor
 
@@ -21,9 +21,9 @@ python api_server.py
 
 Aguarde ver:
 ```
-✅ DaVinci Decoder inicializado
-🔐 Loaded 102 algorithms
-🌐 Server running at: http://localhost:5000
+ DaVinci Decoder inicializado
+ Loaded 102 algorithms
+ Server running at: http://localhost:5000
 ```
 
 ### Passo 2: Abrir Interface
@@ -42,7 +42,7 @@ Você deve ver:
 
 ---
 
-## 🧪 Casos de Teste
+## Casos de Teste
 
 ### Teste 1: Base64 (Encoding Simples)
 
@@ -56,9 +56,9 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: Base64 Encoding
-✅ Plaintext: Hello World!
-✅ Confidence: 95%
+ Algorithm: Base64 Encoding
+ Plaintext: Hello World!
+ Confidence: 95%
 ```
 
 ---
@@ -75,9 +75,9 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: Hexadecimal
-✅ Plaintext: Hello World
-✅ Confidence: 90%
+ Algorithm: Hexadecimal
+ Plaintext: Hello World
+ Confidence: 90%
 ```
 
 ---
@@ -94,10 +94,10 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: Caesar Cipher
-✅ Plaintext: Hello World
-✅ Confidence: 85%
-✅ Key: 3
+ Algorithm: Caesar Cipher
+ Plaintext: Hello World
+ Confidence: 85%
+ Key: 3
 ```
 
 ---
@@ -123,10 +123,10 @@ Wordlist: minhaSenha123
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: AES-192-CBC or AES-256-CBC
-✅ Plaintext: Teste do DaVinci Decoder com AES-192!
-✅ Confidence: 80-85%
-✅ Password: minhaSenha123
+ Algorithm: AES-192-CBC or AES-256-CBC
+ Plaintext: Teste do DaVinci Decoder com AES-192!
+ Confidence: 80-85%
+ Password: minhaSenha123
 ```
 
 ---
@@ -147,10 +147,10 @@ test
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: MD5 Hash Cracker
-✅ Plaintext: hello
-✅ Confidence: 95%
-✅ Password: hello
+ Algorithm: MD5 Hash Cracker
+ Plaintext: hello
+ Confidence: 95%
+ Password: hello
 ```
 
 ---
@@ -167,9 +167,9 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: Morse Code
-✅ Plaintext: HELLO
-✅ Confidence: 90%
+ Algorithm: Morse Code
+ Plaintext: HELLO
+ Confidence: 90%
 ```
 
 ---
@@ -186,9 +186,9 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: ROT13 Encoding
-✅ Plaintext: Hello World
-✅ Confidence: 90%
+ Algorithm: ROT13 Encoding
+ Plaintext: Hello World
+ Confidence: 90%
 ```
 
 ---
@@ -205,32 +205,32 @@ Wordlist: (vazio)
 
 **Resultado Esperado:**
 ```
-✅ Algorithm: Binary Encoding
-✅ Plaintext: Hello
-✅ Confidence: 95%
+ Algorithm: Binary Encoding
+ Plaintext: Hello
+ Confidence: 95%
 ```
 
 ---
 
-## 📊 O Que Observar
+## O Que Observar
 
 ### Interface Funcionando:
-- ✅ Estatísticas em tempo real (chars, entropy, charset)
-- ✅ Loading overlay durante processamento
-- ✅ Resultados ordenados por confiança
-- ✅ Badges coloridos (HIGH/MEDIUM/LOW confidence)
-- ✅ Botão "Try Algorithm" para cada resultado
-- ✅ Animações suaves
+- Estatísticas em tempo real (chars, entropy, charset)
+- Loading overlay durante processamento
+- Resultados ordenados por confiança
+- Badges coloridos (HIGH/MEDIUM/LOW confidence)
+- Botão "Try Algorithm" para cada resultado
+- Animações suaves
 
 ### Performance:
-- ⚡ Encodings: <0.5s
-- ⚡ Cifras clássicas: <1s
-- ⚡ AES (com senha): 1-3s
-- ⚡ Hash crack (10 senhas): <1s
+- Encodings: <0.5s
+- Cifras clássicas: <1s
+- AES (com senha): 1-3s
+- Hash crack (10 senhas): <1s
 
 ---
 
-## 🎯 Teste de Performance
+## Teste de Performance
 
 ### Input Longo (1000+ caracteres)
 
@@ -243,7 +243,7 @@ Cole na interface e teste. Deve processar em <1s.
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Servidor não inicia
 ```bash
@@ -261,9 +261,9 @@ curl http://localhost:5000/api/health
 
 # Deve retornar:
 {
-  "status": "healthy",
-  "algorithms": 102,
-  "version": "2.0"
+ "status": "healthy",
+ "algorithms": 102,
+ "version": "2.0"
 }
 ```
 
@@ -280,7 +280,7 @@ curl http://localhost:5000/api/health
 
 ---
 
-## ✅ Checklist de Validação
+## Checklist de Validação
 
 - [ ] Servidor inicia sem erros
 - [ ] Interface carrega com design premium
@@ -299,12 +299,12 @@ curl http://localhost:5000/api/health
 ## 🎉 Sistema 100% Funcional!
 
 Se todos os testes passaram:
-- ✅ Backend: OK
-- ✅ ML Engine: OK
-- ✅ API: OK
-- ✅ Frontend: OK
+- Backend: OK
+- ML Engine: OK
+- API: OK
+- Frontend: OK
 
-**SISTEMA PRODUCTION READY! 🚀**
+**SISTEMA PRODUCTION READY! **
 
 ---
 
@@ -326,4 +326,4 @@ Se todos os testes passaram:
 
 ---
 
-**Bons testes! 🧪✨**
+**Bons testes! **

@@ -1,13 +1,13 @@
-# 🔐 DaVinci Decoder - Lista Completa de Cifras
+# DaVinci Decoder - Lista Completa de Cifras
 
 **Total:** 50+ Algoritmos de Criptografia e Codificação
 
 ---
 
-## 🔒 CIFRAS MODERNAS (Simétricas)
+## CIFRAS MODERNAS (Simétricas)
 
 ### Família AES (Advanced Encryption Standard)
-1. ✅ **AES-128-ECB** (já implementado)
+1. **AES-128-ECB** (já implementado)
 2. **AES-192-ECB**
 3. **AES-256-ECB**
 4. **AES-128-CBC** (Cipher Block Chaining)
@@ -55,7 +55,7 @@
 
 ---
 
-## 📜 CIFRAS CLÁSSICAS
+## CIFRAS CLÁSSICAS
 
 ### Substituição Monoalfabética
 36. **Caesar Cipher** (ROT-N genérico)
@@ -119,7 +119,7 @@
 
 ---
 
-## ⚡ CIFRAS XOR E VARIAÇÕES
+## CIFRAS XOR E VARIAÇÕES
 
 78. **XOR Single-Byte** (brute force 0-255)
 79. **XOR Multi-Byte Key**
@@ -147,7 +147,7 @@
 
 ---
 
-## 🔐 HASHES (Detecção + Cracking)
+## HASHES (Detecção + Cracking)
 
 ### Hashes Comuns
 91. **MD5** (identificação, not encryption)
@@ -166,7 +166,7 @@
 
 ---
 
-## 📊 CATEGORIZAÇÃO POR DIFICULDADE
+## CATEGORIZAÇÃO POR DIFICULDADE
 
 ### ⭐ Fácil (1-5 min implementação)
 - Caesar, ROT13, Atbash
@@ -193,7 +193,7 @@
 
 ---
 
-## 🎯 PRIORIZAÇÃO SUGERIDA
+## PRIORIZAÇÃO SUGERIDA
 
 ### Fase 1: Essenciais (10 cifras) - 4h
 1. AES-256-ECB
@@ -232,18 +232,18 @@
 
 ```python
 # Já instaladas
-pycryptodome>=3.18.0      # AES, DES, 3DES, Blowfish, RC4
-bcrypt>=4.0.1             # bcrypt hashing
+pycryptodome>=3.18.0  # AES, DES, 3DES, Blowfish, RC4
+bcrypt>=4.0.1    # bcrypt hashing
 
 # A instalar
-cryptography>=41.0.0      # ChaCha20, mais algorithms, melhor API
-pycipher>=0.5.2           # Cifras clássicas (Vigenère, Playfair, etc.)
-base58>=2.1.1             # Base58 encoding (Bitcoin)
+cryptography>=41.0.0  # ChaCha20, mais algorithms, melhor API
+pycipher>=0.5.2   # Cifras clássicas (Vigenère, Playfair, etc.)
+base58>=2.1.1    # Base58 encoding (Bitcoin)
 ```
 
 ---
 
-## 🚀 FEATURES DE DETECÇÃO
+## FEATURES DE DETECÇÃO
 
 ### Auto-Identificação
 - **Entropy Analysis** (entropia Shannon)
@@ -260,7 +260,7 @@ base58>=2.1.1             # Base58 encoding (Bitcoin)
 
 ---
 
-## 📊 ESTATÍSTICAS FINAIS
+## ESTATÍSTICAS FINAIS
 
 - **Total de Algoritmos:** 100+
 - **Implementação Básica:** 30-40 cifras essenciais
@@ -270,11 +270,11 @@ base58>=2.1.1             # Base58 encoding (Bitcoin)
 
 ---
 
-## 💡 RECOMENDAÇÃO
+## RECOMENDAÇÃO
 
 Para um **DaVinci Decoder profissional**, sugiro implementar:
 
-✅ **Fase 1 + Fase 2** = **20 cifras mais usadas** (7h de trabalho)
+ **Fase 1 + Fase 2** = **20 cifras mais usadas** (7h de trabalho)
 
 Isso cobre:
 - 95% dos casos de uso reais
@@ -282,4 +282,4 @@ Isso cobre:
 - Principais cifras clássicas para CTF/puzzles
 - Auto-detecção inteligente
 
-**Resultado:** Ferramenta extremamente poderosa e profissional! 🎨🔓
+**Resultado:** Ferramenta extremamente poderosa e profissional! 🔓

@@ -1,6 +1,6 @@
-# 🎨 DaVinci Decoder - Interface Web Criada!
+# DaVinci Decoder - Interface Web Criada!
 
-## ✅ Sistema de UI Completo
+## Sistema de UI Completo
 
 ### Arquivos Criados:
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 🎨 Design Implementado
+## Design Implementado
 
 ### Paleta de Cores
 - **Primary:** Purple/Blue gradient (#667eea → #764ba2)
@@ -24,20 +24,20 @@
 - **Text:** High contrast (#f5f5f5)
 
 ### Componentes:
-✅ Header com logo animado e stats  
-✅ Painel duplo (Input/Output)  
-✅ Input stats em tempo real (entropia, charset, tamanho)  
-✅ Cards de resultado com badges de confiança  
-✅ Modal de seleção de algoritmos  
-✅ Loading overlay animado  
-✅ 4 category cards no rodapé  
-✅ Animações suaves e micro-interações  
-✅ Gradientes vibrantes e glassmorphism  
-✅ Layout 100% responsivo
+ Header com logo animado e stats 
+ Painel duplo (Input/Output) 
+ Input stats em tempo real (entropia, charset, tamanho) 
+ Cards de resultado com badges de confiança 
+ Modal de seleção de algoritmos 
+ Loading overlay animado 
+ 4 category cards no rodapé 
+ Animações suaves e micro-interações 
+ Gradientes vibrantes e glassmorphism 
+ Layout 100% responsivo
 
 ---
 
-## 🚀 Como Usar
+## Como Usar
 
 ### Opção 1: Demo Mode (Mais Fácil)
 ```bash
@@ -78,91 +78,91 @@ python api_server.py
 ```javascript
 POST /api/auto-detect
 {
-  "ciphertext": "SGVsbG8gV29ybGQh",
-  "wordlist": ["password", "123456"],
-  "max_results": 5
+ "ciphertext": "SGVsbG8gV29ybGQh",
+ "wordlist": ["password", "123456"],
+ "max_results": 5
 }
 ```
 
 ### Exemplo de Resposta:
 ```javascript
 [
-  {
-    "algorithm": "Base64 Encoding",
-    "plaintext": "Hello World!",
-    "confidence": 95,
-    "password": null,
-    "method": "decode"
-  }
+ {
+ "algorithm": "Base64 Encoding",
+ "plaintext": "Hello World!",
+ "confidence": 95,
+ "password": null,
+ "method": "decode"
+ }
 ]
 ```
 
 ---
 
-## 🎯 Funcionalidades da UI
+## Funcionalidades da UI
 
 ### Input Panel
-- ✅ Textarea com syntax highlight
-- ✅ Stats em tempo real:
-  - Contagem de caracteres
-  - Entropia Shannon (0-8 bits)
-  - Charset detection (Base64, Hex, Alfabético, etc.)
-- ✅ Wordlist opcional
-- ✅ 2 modos: Auto-Detect e Manual
+- Textarea com syntax highlight
+- Stats em tempo real:
+ - Contagem de caracteres
+ - Entropia Shannon (0-8 bits)
+ - Charset detection (Base64, Hex, Alfabético, etc.)
+- Wordlist opcional
+- 2 modos: Auto-Detect e Manual
 
 ### Output Panel
-- ✅ Cards de resultado ordenados por confiança
-- ✅ Badge verde/amarelo/vermelho por confiança
-- ✅ Indicador de algoritmo usado
-- ✅ Senha utilizada (quando aplicável)
-- ✅ Plaintext com formatação
+- Cards de resultado ordenados por confiança
+- Badge verde/amarelo/vermelho por confiança
+- Indicador de algoritmo usado
+- Senha utilizada (quando aplicável)
+- Plaintext com formatação
 
 ### Interatividade
-- ✅ Ctrl+Enter para auto-detect
-- ✅ ESC para fechar modais
-- ✅ Busca de algoritmos em tempo real
-- ✅ Animações suaves (300ms cubic-bezier)
-- ✅ Hover effects em todos os elementos
+- Ctrl+Enter para auto-detect
+- ESC para fechar modais
+- Busca de algoritmos em tempo real
+- Animações suaves (300ms cubic-bezier)
+- Hover effects em todos os elementos
 
 ---
 
-## 🎨 Preview do Design
+## Preview do Design
 
 ### Header
 ```
 ┌─────────────────────────────────────────────────┐
-│ 🔓 DaVinci Decoder              [102] [100%]   │
-│    102 Algoritmos • Auto-Detect  Algoritmos    │
+│ 🔓 DaVinci Decoder    [102] [100%] │
+│ 102 Algoritmos • Auto-Detect Algoritmos │
 └─────────────────────────────────────────────────┘
 ```
 
 ### Main Layout
 ```
 ┌──────────────────┬──────────────────┐
-│   🔒 Ciphertext  │  ✨ Resultado    │
-│                  │                  │
-│ [Input Area]     │ [Output Cards]   │
-│                  │                  │
-│ 📏 16 chars      │ ✅ Base64        │
-│ 📊 4.23 bits     │ 95% confiança    │
-│ 🔤 Base64        │ Hello World!     │
-│                  │                  │
-│ [🤖 Auto-Detect] │                  │
-│ [⚙️  Manual]     │                  │
+│ Ciphertext │ Resultado │
+│     │     │
+│ [Input Area]  │ [Output Cards] │
+│     │     │
+│ 📏 16 chars  │ Base64  │
+│ 4.23 bits  │ 95% confiança │
+│ Base64  │ Hello World!  │
+│     │     │
+│ [ Auto-Detect] │     │
+│ [ Manual]  │     │
 └──────────────────┴──────────────────┘
 ```
 
 ### Footer Categories
 ```
 ┌─────┬─────┬─────┬─────┐
-│ 🔐  │ 📜  │ 🔤  │ #️⃣  │
-│  36 │  32 │  21 │  13 │
+│ │ │ │ │
+│ 36 │ 32 │ 21 │ 13 │
 └─────┴─────┴─────┴─────┘
 ```
 
 ---
 
-## 📊 Estatísticas da UI
+## Estatísticas da UI
 
 - **HTML:** ~300 linhas
 - **CSS:** ~700 linhas (design system completo)
@@ -181,28 +181,28 @@ POST /api/auto-detect
 ## 🎉 Diferenciais
 
 ### Design
-✅ Gradientes vibrantes purple/blue  
-✅ Dark theme profissional  
-✅ Glassmorphism e blur effects  
-✅ Micro-animações em hover  
-✅ Floating background gradients  
-✅ Grid pattern sutil
+ Gradientes vibrantes purple/blue 
+ Dark theme profissional 
+ Glassmorphism e blur effects 
+ Micro-animações em hover 
+ Floating background gradients 
+ Grid pattern sutil
 
 ### UX
-✅ Feedback visual imediato  
-✅ Loading states claros  
-✅ Empty states informativos  
-✅ Error handling elegante  
-✅ Keyboard shortcuts  
-✅ Mobile responsive
+ Feedback visual imediato 
+ Loading states claros 
+ Empty states informativos 
+ Error handling elegante 
+ Keyboard shortcuts 
+ Mobile responsive
 
 ### Tecnologia
-✅ Vanilla JS (sem frameworks!)  
-✅ CSS Variables para temas  
-✅ Fetch API para requisições  
-✅ Flask REST API  
-✅ CORS habilitado  
-✅ JSON responses
+ Vanilla JS (sem frameworks!) 
+ CSS Variables para temas 
+ Fetch API para requisições 
+ Flask REST API 
+ CORS habilitado 
+ JSON responses
 
 ---
 
@@ -216,15 +216,15 @@ POST /api/auto-detect
 
 ---
 
-## ✅ Conclusão
+## Conclusão
 
 **Interface 100% funcional e profissional!**
 
-- ✅ Design estado da arte
-- ✅ Integração completa com 102 algoritmos
-- ✅ Demo mode standalone
-- ✅ API REST documentada
-- ✅ Código limpo e organizado
+- Design estado da arte
+- Integração completa com 102 algoritmos
+- Demo mode standalone
+- API REST documentada
+- Código limpo e organizado
 **Desenvolvido por: Matheus Bueno**
 
-**Status:** PRODUCTION READY 🚀
+**Status:** PRODUCTION READY 

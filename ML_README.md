@@ -1,41 +1,41 @@
-# 🤖 DaVinci Decoder - Machine Learning Engine
+# DaVinci Decoder - Machine Learning Engine
 
-## 📊 Sistema de Aprendizado Automático
+## Sistema de Aprendizado Automático
 
 O DaVinci Decoder agora possui um **motor de Machine Learning** que aprende a classificar cifras automaticamente!
 
 ---
 
-## ✨ O Que Foi Implementado
+## O Que Foi Implementado
 
 ### 1. ML Engine (`backend/ml_engine.py`)
 Motor de classificação com **Random Forest** e **25 features**
 
 #### Features Extraídas:
 1-8. **Estatísticas Básicas:**
-   - Tamanho do texto
-   - Entropia Shannon
-   - Ratios (espaços, maiúsculas, minúsculas, dígitos, especiais)
-   - Caracteres únicos
+ - Tamanho do texto
+ - Entropia Shannon
+ - Ratios (espaços, maiúsculas, minúsculas, dígitos, especiais)
+ - Caracteres únicos
 
 9-16. **Análise de Charset:**
-   - É Base64?
-   - É Hexadecimal?
-   - É Binário?
-   - É Morse?
-   - Múltiplo de 8/16/32? (block ciphers)
-   - Tamanho médio de palavras
+ - É Base64?
+ - É Hexadecimal?
+ - É Binário?
+ - É Morse?
+ - Múltiplo de 8/16/32? (block ciphers)
+ - Tamanho médio de palavras
 
 17-20. **N-Grams:**
-   - Top 3 caracteres mais frequentes
-   - Entropia de bigramas
-   - Entropia de trigramas
-   - Blocos repetidos (ECB pattern)
+ - Top 3 caracteres mais frequentes
+ - Entropia de bigramas
+ - Entropia de trigramas
+ - Blocos repetidos (ECB pattern)
 
 21-25. **Padrões Específicos:**
-   - Ratio alfabético
-   - Index of Coincidence (IoC)
-   - Tem padding (=, %)?
+ - Ratio alfabético
+ - Index of Coincidence (IoC)
+ - Tem padding (=, %)?
 
 ### 2. Script de Treinamento (`train_ml.py`)
 Gera **dados sintéticos** e treina o modelo
@@ -48,7 +48,7 @@ Gera **dados sintéticos** e treina o modelo
 
 ---
 
-## 🚀 Como Usar
+## Como Usar
 
 ### Passo 1: Instalar scikit-learn
 ```bash
@@ -80,12 +80,12 @@ engine = CipherMLEngine(model_path='backend/ml_model.pkl')
 predictions = engine.predict("SGVsbG8gV29ybGQh", top_n=3)
 
 for label, probability in predictions:
-    print(f"{label}: {probability*100:.1f}%")
+ print(f"{label}: {probability*100:.1f}%")
 ```
 
 ---
 
-## 📊 Modelo Random Forest
+## Modelo Random Forest
 
 ### Configuração:
 - **Algoritmo:** Random Forest Classifier
@@ -102,7 +102,7 @@ for label, probability in predictions:
 
 ---
 
-## 🎯 Integração com Auto-Detect
+## Integração com Auto-Detect
 
 O modelo ML pode ser integrado no `decoder_manager.py` para:
 
@@ -114,31 +114,31 @@ O modelo ML pode ser integrado no `decoder_manager.py` para:
 ### Exemplo de Integração:
 ```python
 def auto_detect_ml(self, ciphertext, wordlist):
-    # 1. Usar ML para pré-classificar
-    ml_predictions = self.ml_engine.predict(ciphertext, top_n=5)
-    
-    # 2. Filtrar decoders relevantes
-    relevant_decoders = []
-    for label, prob in ml_predictions:
-        if prob > 0.1:  # >10% probabilidade
-            decoder = self.get_decoder_by_type(label)
-            relevant_decoders.append((decoder, prob))
-    
-    # 3. Testar apenas decoders relevantes
-    results = []
-    for decoder, ml_prob in relevant_decoders:
-        result = decoder.decrypt_with_keys(ciphertext, wordlist)
-        if result:
-            # Combinar ML probability com confidence
-            combined_score = (ml_prob + result.confidence) / 2
-            results.append((result, combined_score))
-    
-    return results
+ # 1. Usar ML para pré-classificar
+ ml_predictions = self.ml_engine.predict(ciphertext, top_n=5)
+ 
+ # 2. Filtrar decoders relevantes
+ relevant_decoders = []
+ for label, prob in ml_predictions:
+  if prob > 0.1: # >10% probabilidade
+   decoder = self.get_decoder_by_type(label)
+   relevant_decoders.append((decoder, prob))
+ 
+ # 3. Testar apenas decoders relevantes
+ results = []
+ for decoder, ml_prob in relevant_decoders:
+  result = decoder.decrypt_with_keys(ciphertext, wordlist)
+  if result:
+   # Combinar ML probability com confidence
+   combined_score = (ml_prob + result.confidence) / 2
+   results.append((result, combined_score))
+ 
+ return results
 ```
 
 ---
 
-## 🔬 Detalhes Técnicos
+## Detalhes Técnicos
 
 ### Features Mais Importantes:
 Após treinamento, geralmente são:
@@ -149,15 +149,15 @@ Após treinamento, geralmente são:
 5. **Bigram Entropy** - Padrões de linguagem
 
 ### Vantagens do Random Forest:
-✅ Rápido para treinar e predizer  
-✅ Não precisa de GPU  
-✅ Robusto a outliers  
-✅ Interpretável (feature importance)  
-✅ Não requer normalização
+ Rápido para treinar e predizer 
+ Não precisa de GPU 
+ Robusto a outliers 
+ Interpretável (feature importance) 
+ Não requer normalização
 
 ---
 
-## 📈 Expandindo o Sistema
+## Expandindo o Sistema
 
 ### Adicionar Novas Classes:
 1. Edite `generate_training_data()` em `train_ml.py`
@@ -176,14 +176,14 @@ Após treinamento, geralmente são:
 from xgboost import XGBClassifier
 
 model = XGBClassifier(
-    tree_method='gpu_hist',  # Usar GPU
-    n_estimators=100
+ tree_method='gpu_hist', # Usar GPU
+ n_estimators=100
 )
 ```
 
 ---
 
-## 🎓 Conceitos de ML
+## Conceitos de ML
 
 ### Supervisionado
 O modelo **aprende** com exemplos rotulados:
@@ -205,19 +205,19 @@ Características **extraídas** do ciphertext:
 
 ---
 
-## ✅ Resultado Final
+## Resultado Final
 
 Após treinar, o sistema será capaz de:
 
-✅ **Classificar** cifras com >90% de acurácia  
-✅ **Priorizar** algoritmos mais prováveis  
-✅ **Acelerar** auto-detecção (pula impossíveis)  
-✅ **Aprender** novos padrões com re-treinamento  
-✅ **Funcionar** 100% offline na CPU
+ **Classificar** cifras com >90% de acurácia 
+ **Priorizar** algoritmos mais prováveis 
+ **Acelerar** auto-detecção (pula impossíveis) 
+ **Aprender** novos padrões com re-treinamento 
+ **Funcionar** 100% offline na CPU
 
 ---
 
-## 🎯 Próximos Passos
+## Próximos Passos
 
 1. Execute `python train_ml.py`
 2. Veja as predições de teste
@@ -226,4 +226,4 @@ Após treinar, o sistema será capaz de:
 
 **Desenvolvido por: Matheus Bueno**
 
-**Sistema agora é inteligente! 🧠**
+**Sistema agora é inteligente! **
