@@ -1,6 +1,4 @@
-# 🎉 DaVinci Decoder - Sistema COMPLETO com 95+ Algoritmos
-
-## IMPLEMENTAÇÃO 100% CONCLUÍDA!
+# DaVinci Decoder - Sistema COMPLETO com 95+ Algoritmos
 
 O DaVinci Decoder é agora um **sistema universal de quebra de cifras** com **95 algoritmos completos** implementados e testados!
 
