@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaVinci Decoder - Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-gradient-1"></div>
+    <div class="bg-gradient-2"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="url(#logoGradient)" stroke-width="2" />
+                    <path d="M15 20L18 23L25 16" stroke="url(#logoGradient)" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#667eea" />
+                            <stop offset="100%" stop-color="#764ba2" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="logo-text">
+                    <h1>DaVinci Decoder</h1>
+                    <span class="subtitle">102 Algoritmos • Auto-Detect • Demo Mode</span>
+                </div>
+            </div>
+
+            <div class="header-stats">
+                <div class="stat-pill">
+                    <span class="stat-value">102</span>
+                    <span class="stat-label">Algoritmos</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">Completude</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <div class="panel panel-input">
+                <div class="panel-header">
+                    <div class="panel-icon">🔒</div>
+                    <div>
+                        <h2>Ciphertext</h2>
+                        <p>Cole o texto cifrado aqui</p>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <textarea id="ciphertext" class="input-field"
+                        placeholder="SGVsbG8gV29ybGQh&#10;&#10;ou&#10;&#10;Khoor Zruog"
+                        rows="12">SGVsbG8gV29ybGQh</textarea>
+
+                    <div class="input-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">📏</span>
+                            <span id="charCount">16</span> caracteres
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">📊</span>
+                            <span id="entropy">4.23</span> bits
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🔤</span>
+                            <span id="charset">Base64</span>
+                        </div>
+                    </div>
+
+                    <div class="wordlist-section">
+                        <label class="label">
+                            <span class="label-icon">📝</span>
+                            Wordlist (opcional)
+                        </label>
+                        <textarea id="wordlist" class="input-field-small" placeholder="password&#10;123456&#10;admin"
+                            rows="4"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="runDemo()">
+                            <span class="btn-icon">🤖</span>
+                            Auto-Detect & Decrypt (Demo)
+                        </button>
+                        <button class="btn btn-secondary" onclick="showInfo()">
+                            <span class="btn-icon">ℹ️</span>
+                            Sobre o Sistema
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-output">
+                <div class="panel-header">
+                    <div class="panel-icon">✨</div>
+                    <div>
+                        <h2>Resultado</h2>
+                        <p id="resultStatus">Clique em "Auto-Detect" para começar</p>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <div id="resultContainer" class="result-empty">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔓</div>
+                            <h3>Modo Demo Ativo</h3>
+                            <p>Clique em "Auto-Detect" para ver uma demonstração do sistema</p>
+                            <p style="margin-top: 1rem; font-size: 0.875rem;">💡 Para usar o sistema completo, inicie o
+                                servidor Flask:<br><code style="color: var(--primary);">python api_server.py</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="algorithm-categories">
+            <div class="category-card">
+                <div class="category-icon">🔐</div>
+                <div class="category-info">
+                    <div class="category-number">36</div>
+                    <div class="category-label">Cifras Modernas</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">📜</div>
+                <div class="category-info">
+                    <div class="category-number">32</div>
+                    <div class="category-label">Cifras Clássicas</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🔤</div>
+                <div class="category-info">
+                    <div class="category-number">21</div>
+                    <div class="category-label">Encodings</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">#️⃣</div>
+                <div class="category-info">
+                    <div class="category-number">13</div>
+                    <div class="category-label">Hash Crackers</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo Mode JavaScript
+        function runDemo() {
+            const resultContainer = document.getElementById('resultContainer');
+            const resultStatus = document.getElementById('resultStatus');
+
+            resultStatus.textContent = 'Processando...';
+            resultContainer.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><h3>Analisando...</h3></div>';
+
+            setTimeout(() => {
+                resultStatus.textContent = '1 resultado encontrado';
+                resultContainer.className = '';
+                resultContainer.innerHTML = `
+                    <div class="result-card success">
+                        <div class="result-header">
+                            <div class="result-algorithm">🏆 Base64 Encoding</div>
+                            <div class="confidence-badge" style="background: #38ef7d">95% confiança</div>
+                        </div>
+                        <div class="result-plaintext">Hello World!</div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                        <h3 style="margin-bottom: 1rem; color: var(--text-primary);">📊 Processo de Detecção:</h3>
+                        <ol style="color: var(--text-secondary); line-height: 1.8;">
+                            <li>✅ Análise de entropia: 4.23 bits (típico de Base64)</li>
+                            <li>✅ Charset detectado: Caracteres A-Z, a-z, 0-9, +, /</li>
+                            <li>✅ Tamanho múltiplo de 4 (requisito Base64)</li>
+                            <li>✅ Decodificação bem-sucedida</li>
+                            <li>✅ Plaintext contém 95% caracteres imprimíveis</li>
+                        </ol>
+                    </div>
+                `;
+            }, 800);
+        }
+
+        function showInfo() {
+            const resultContainer = document.getElementById('resultContainer');
+            const resultStatus = document.getElementById('resultStatus');
+
+            resultStatus.textContent = 'Informações do Sistema';
+            resultContainer.className = '';
+            resultContainer.innerHTML = `
+                <div style="padding: 2rem; background: var(--bg-elevated); border: 2px solid var(--primary); border-radius: var(--radius-lg);">
+                    <h2 style="margin-bottom: 1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        🏆 DaVinci Decoder v1.0.0
+                    </h2>
+                    
+                    <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                            <strong style="color: var(--primary);">📦 Total:</strong> 102 algoritmos implementados
+                        </div>
+                        <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                            <strong style="color: var(--primary);">✅ Completude:</strong> 100% da lista original + 1 bônus
+                        </div>
+                        <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                            <strong style="color: var(--primary);">🤖 Auto-Detect:</strong> Sistema inteligente de detecção
+                        </div>
+                        <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                            <strong style="color: var(--primary);">🔑 Key Derivation:</strong> 20-50 variações por senha
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">📋 Categorias:</h3>
+                    <ul style="color: var(--text-secondary); line-height: 2;">
+                        <li>🔐 36 Cifras Modernas (AES, DES, Blowfish, ChaCha20...)</li>
+                        <li>📜 32 Cifras Clássicas (Caesar, Vigenère, Playfair...)</li>
+                        <li>🔤 21 Encodings (Base64, Hex, Morse, Braille...)</li>
+                        <li>#️⃣ 13 Hash Crackers (MD5, SHA*, Bcrypt...)</li>
+                    </ul>
+                    
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-tertiary); border-left: 4px solid var(--primary); border-radius: var(--radius-sm);">
+                        <strong>💡 Para usar o sistema completo:</strong><br>
+                        <code style="color: var(--primary);">1. pip install flask flask-cors</code><br>
+                        <code style="color: var(--primary);">2. python api_server.py</code><br>
+                        <code style="color: var(--text-secondary);">3. Acesse http://localhost:5000</code>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-update stats
+        document.getElementById('ciphertext').addEventListener('input', function () {
+            const text = this.value;
+            document.getElementById('charCount').textContent = text.length;
+
+            // Simple entropy
+            const freq = {};
+            for (const c of text) {
+                freq[c] = (freq[c] || 0) + 1;
+            }
+            let entropy = 0;
+            for (const count of Object.values(freq)) {
+                const p = count / text.length;
+                entropy -= p * Math.log2(p || 1);
+            }
+            document.getElementById('entropy').textContent = entropy.toFixed(2);
+
+            // Charset
+            if (/^[A-Za-z0-9+/=]+$/.test(text) && text.length % 4 === 0) {
+                document.getElementById('charset').textContent = 'Base64';
+            } else if (/^[0-9A-Fa-f]+$/.test(text)) {
+                document.getElementById('charset').textContent = 'Hexadecimal';
+            } else if (/^[01]+$/.test(text)) {
+                document.getElementById('charset').textContent = 'Binário';
+            } else if (/[A-Za-z]/.test(text)) {
+                document.getElementById('charset').textContent = 'Alfabético';
+            } else {
+                document.getElementById('charset').textContent = 'Misto';
+            }
+        });
+
+        console.log('🎉 DaVinci Decoder Demo Mode');
+        console.log('💡 Execute runDemo() para demonstração');
+        console.log('ℹ️  Execute showInfo() para informações');
+    </script>
+</body>
+
+</html>

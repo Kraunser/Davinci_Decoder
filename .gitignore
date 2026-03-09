@@ -1,0 +1,21 @@
+# Ambiente Python
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/.pytest_cache/
+pytest-cache-files-*/
+
+# Logs e outputs
+error_log.txt
+test_output.log
+import_errors.txt
+file_audit.txt
+*.log
+
+# Arquivos gerados ou grandes que não precisam ir para o git (depende do que você quiser salvar)
+# result*.txt
+# zip_contents.txt
+
+# Arquivos do OS
+.DS_Store
+Thumbs.db

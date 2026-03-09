@@ -1,0 +1,161 @@
+/* === Action Bar === */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.action-group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.action-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: var(--bg-tertiary);
+    transform: translateY(-2px);
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-btn span:first-child {
+    font-size: 1.125rem;
+}
+
+/* === History Cards === */
+.history-list {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.history-card {
+    padding: var(--space-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.history-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.history-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.history-delete {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.history-delete:hover {
+    background: var(--bg-tertiary);
+    transform: scale(1.1);
+}
+
+.history-ciphertext {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-results {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.history-load {
+    width: 100%;
+}
+
+/* === Config Section === */
+.config-section {
+    padding: var(--space-md) 0;
+}
+
+.config-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+    font-style: italic;
+}
+
+/* === Light Theme === */
+body[data-theme="light"] {
+    --bg-primary: hsl(0, 0%, 98%);
+    --bg-secondary: hsl(0, 0%, 100%);
+    --bg-tertiary: hsl(0, 0%, 96%);
+    --bg-elevated: hsl(0, 0%, 100%);
+
+    --text-primary: hsl(0, 0%, 10%);
+    --text-secondary: hsl(0, 0%, 30%);
+    --text-muted: hsl(0, 0%, 50%);
+
+    --border-color: hsl(240, 10%, 85%);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme="light"] .bg-grid {
+    background-image:
+        linear-gradient(rgba(102, 126, 234, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 126, 234, 0.08) 1px, transparent 1px);
+}
+
+body[data-theme="light"] .input-field,
+body[data-theme="light"] .input-field-small {
+    background: hsl(0, 0%, 98%);
+}
+
+body[data-theme="light"] .input-field::placeholder,
+body[data-theme="light"] .input-field-small::placeholder {
+    color: hsl(0, 0%, 60%);
+}
