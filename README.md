@@ -308,9 +308,9 @@ Livre para uso educacional e pesquisa em criptoanálise.
 
 ## 🎨 Créditos
 
-**Nome:** DaVinci Decoder  
-**Inspiração:** Leonardo da Vinci e seus manuscritos técnicos  
-**Tema:** Renascimento moderno com elementos de engenharia  
+**Nome:** Matheus Bueno  
+**Inspiração:** Leonardo da Vinci 
+
 
 ---
 
