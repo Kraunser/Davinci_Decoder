@@ -57,12 +57,54 @@ BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 
+def _sniff_media_mime(raw: bytes) -> Optional[str]:
+    if raw.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if raw.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if raw.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    if raw.startswith(b"RIFF") and raw[8:12] == b"WEBP":
+        return "image/webp"
+    if raw.startswith(b"RIFF") and raw[8:12] == b"WAVE":
+        return "audio/wav"
+    if raw.startswith(b"ID3") or (len(raw) >= 2 and raw[0] == 0xFF and (raw[1] & 0xE0) == 0xE0):
+        return "audio/mpeg"
+    if raw.startswith(b"OggS"):
+        return "audio/ogg"
+    if raw.startswith(b"fLaC"):
+        return "audio/flac"
+    return None
+
+
+def _bytes_to_text_or_data_url(raw: bytes) -> Optional[str]:
+    if not raw:
+        return None
+
+    try:
+        decoded = raw.decode("utf-8")
+        if decoded and all(ch.isprintable() or ch in "\n\r\t" for ch in decoded):
+            return decoded
+    except UnicodeDecodeError:
+        pass
+
+    mime_type = _sniff_media_mime(raw) or "application/octet-stream"
+    encoded = base64.b64encode(raw).decode("ascii")
+    return f"data:{mime_type};base64,{encoded}"
+
+
 def _single_result(decoder: BaseDecoder, plaintext: str, minimum_confidence: float, method: str) -> List[DecoderResult]:
+    confidence = max(minimum_confidence, score_plaintext(plaintext))
+    if plaintext.startswith("data:application/octet-stream;base64,"):
+        confidence = min(confidence, 35.0)
+    elif plaintext.startswith("data:image/") or plaintext.startswith("data:audio/"):
+        confidence = min(confidence, 68.0)
+
     return [
         DecoderResult(
             success=True,
             plaintext=plaintext,
-            confidence=max(minimum_confidence, score_plaintext(plaintext)),
+            confidence=confidence,
             method=method,
             decoder_name=decoder.get_algorithm_name(),
             algorithm=decoder.get_algorithm_name(),
@@ -95,7 +137,7 @@ class Base64EncodingDecoder(BaseDecoder):
             return None
         cleaned += "=" * ((4 - (len(cleaned) % 4)) % 4)
         try:
-            return base64.b64decode(cleaned, validate=False).decode("utf-8")
+            return _bytes_to_text_or_data_url(base64.b64decode(cleaned, validate=False))
         except Exception:
             return None
 
@@ -114,7 +156,7 @@ class Base32EncodingDecoder(BaseDecoder):
             return None
         cleaned += "=" * ((8 - (len(cleaned) % 8)) % 8)
         try:
-            return base64.b32decode(cleaned, casefold=True).decode("utf-8")
+            return _bytes_to_text_or_data_url(base64.b32decode(cleaned, casefold=True))
         except Exception:
             return None
 
@@ -134,10 +176,7 @@ class Base58EncodingDecoder(BaseDecoder):
         raw = _decode_base_n(cleaned, BASE58_ALPHABET)
         if raw is None:
             return None
-        try:
-            return raw.decode("utf-8")
-        except Exception:
-            return None
+        return _bytes_to_text_or_data_url(raw)
 
     def attack(self, ciphertext: str, wordlist=None, max_attempts=None) -> List[DecoderResult]:
         plaintext = self.decrypt(ciphertext, b"", "base58")
@@ -155,10 +194,7 @@ class Base62EncodingDecoder(BaseDecoder):
         raw = _decode_base_n(cleaned, BASE62_ALPHABET)
         if raw is None:
             return None
-        try:
-            return raw.decode("utf-8")
-        except Exception:
-            return None
+        return _bytes_to_text_or_data_url(raw)
 
     def attack(self, ciphertext: str, wordlist=None, max_attempts=None) -> List[DecoderResult]:
         plaintext = self.decrypt(ciphertext, b"", "base62")
@@ -174,7 +210,7 @@ class Base85EncodingDecoder(BaseDecoder):
         if len(cleaned) < 5:
             return None
         try:
-            return base64.b85decode(cleaned.encode("ascii")).decode("utf-8")
+            return _bytes_to_text_or_data_url(base64.b85decode(cleaned.encode("ascii")))
         except Exception:
             return None
 
@@ -192,7 +228,7 @@ class Ascii85EncodingDecoder(BaseDecoder):
         if len(cleaned) < 5:
             return None
         try:
-            return base64.a85decode(cleaned.encode("ascii"), adobe=False).decode("utf-8")
+            return _bytes_to_text_or_data_url(base64.a85decode(cleaned.encode("ascii"), adobe=False))
         except Exception:
             return None
 
@@ -210,7 +246,7 @@ class HexEncodingDecoder(BaseDecoder):
         if not value or len(value) % 2 != 0 or not re.fullmatch(r"[0-9a-fA-F]+", value):
             return None
         try:
-            return binascii.unhexlify(value).decode("utf-8")
+            return _bytes_to_text_or_data_url(binascii.unhexlify(value))
         except Exception:
             return None
 
@@ -230,7 +266,7 @@ class BinaryEncodingDecoder(BaseDecoder):
         if not all(len(chunk) == 8 and set(chunk).issubset({"0", "1"}) for chunk in chunks):
             return None
         try:
-            return "".join(chr(int(chunk, 2)) for chunk in chunks)
+            return _bytes_to_text_or_data_url(bytes(int(chunk, 2) for chunk in chunks))
         except Exception:
             return None
 
@@ -264,7 +300,7 @@ class QuotedPrintableDecoder(BaseDecoder):
         if "=" not in value:
             return None
         try:
-            decoded = quopri.decodestring(value.encode("utf-8")).decode("utf-8")
+            decoded = _bytes_to_text_or_data_url(quopri.decodestring(value.encode("utf-8")))
             return decoded if decoded != value else None
         except Exception:
             return None
@@ -387,7 +423,7 @@ class OctalEncodingDecoder(BaseDecoder):
         if not all(re.fullmatch(r"[0-7]{1,3}", p) for p in parts):
             return None
         try:
-            decoded = "".join(chr(int(p, 8)) for p in parts)
+            decoded = _bytes_to_text_or_data_url(bytes(int(p, 8) for p in parts))
             return decoded if decoded else None
         except Exception:
             return None
@@ -409,7 +445,7 @@ class DecimalEncodingDecoder(BaseDecoder):
         if not all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
             return None
         try:
-            decoded = "".join(chr(int(p)) for p in parts)
+            decoded = _bytes_to_text_or_data_url(bytes(int(p) for p in parts))
             return decoded if decoded else None
         except Exception:
             return None
@@ -496,7 +532,7 @@ class UuencodeDecoder(BaseDecoder):
         lines = value.splitlines() or [value]
         for line in lines:
             try:
-                decoded = binascii.a2b_uu(line.encode("ascii")).decode("utf-8")
+                decoded = _bytes_to_text_or_data_url(binascii.a2b_uu(line.encode("ascii")))
                 if decoded:
                     return decoded
             except Exception:

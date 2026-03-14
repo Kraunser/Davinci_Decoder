@@ -127,6 +127,18 @@
                     </div>
 
                     <div class="wordlist-section">
+                        <label class="label" for="cipherFile">
+                            <span class="label-icon">📁</span>
+                            Arquivo criptografado (opcional)
+                        </label>
+                        <input id="cipherFile" class="input-field-small" type="file"
+                            accept=".txt,.log,.csv,.json,.xml,.enc,.cipher,.b64,.hex,.dat,.pem,.asc,text/plain">
+                        <p id="fileStatus" style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                            Se houver arquivo selecionado, ele terá prioridade sobre o texto digitado.
+                        </p>
+                    </div>
+
+                    <div class="wordlist-section">
                         <label class="label">
                             <span class="label-icon">📝</span>
                             Wordlist (opcional)

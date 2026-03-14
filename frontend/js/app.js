@@ -10,6 +10,7 @@ let API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
 const state = {
     algorithms: [],
     currentCiphertext: '',
+    currentInputLabel: '',
     currentWordlist: [],
     isProcessing: false,
     currentResults: [],
@@ -19,6 +20,8 @@ const state = {
 // === DOM Elements ===
 const elements = {
     ciphertext: document.getElementById('ciphertext'),
+    cipherFile: document.getElementById('cipherFile'),
+    fileStatus: document.getElementById('fileStatus'),
     wordlist: document.getElementById('wordlist'),
     btnAutoDetect: document.getElementById('btnAutoDetect'),
     btnManual: document.getElementById('btnManual'),
@@ -60,6 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initEventListeners();
     await loadAlgorithms();
     updateStats();
+    updateFileStatus();
     loadTheme();
     loadConfig();
 });
@@ -68,6 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function initEventListeners() {
     // Input tracking
     elements.ciphertext.addEventListener('input', handleCiphertextChange);
+    elements.cipherFile.addEventListener('change', handleFileChange);
 
     // Button actions
     elements.btnAutoDetect.addEventListener('click', handleAutoDetect);
@@ -104,7 +109,85 @@ function initEventListeners() {
 // === Ciphertext Handler ===
 function handleCiphertextChange() {
     state.currentCiphertext = elements.ciphertext.value;
+    if (state.currentCiphertext.trim()) {
+        state.currentInputLabel = state.currentCiphertext;
+    }
     updateStats();
+}
+
+function handleFileChange() {
+    updateFileStatus();
+}
+
+function updateFileStatus() {
+    const file = getSelectedFile();
+    if (!file) {
+        elements.fileStatus.textContent = 'Se houver arquivo selecionado, ele terá prioridade sobre o texto digitado.';
+        return;
+    }
+
+    elements.fileStatus.textContent = `Arquivo selecionado: ${file.name} (${formatFileSize(file.size)})`;
+}
+
+function getSelectedFile() {
+    return elements.cipherFile.files && elements.cipherFile.files.length > 0
+        ? elements.cipherFile.files[0]
+        : null;
+}
+
+function getWordlist() {
+    return elements.wordlist.value
+        .split('\n')
+        .map(w => w.trim())
+        .filter(w => w.length > 0);
+}
+
+function getInputSource() {
+    const file = getSelectedFile();
+    if (file) {
+        return { kind: 'file', file };
+    }
+
+    const ciphertext = state.currentCiphertext.trim();
+    if (ciphertext) {
+        return { kind: 'text', ciphertext };
+    }
+
+    return null;
+}
+
+function setCurrentInputLabel(inputSource) {
+    if (!inputSource) {
+        state.currentInputLabel = '';
+        return;
+    }
+
+    if (inputSource.kind === 'file') {
+        state.currentInputLabel = `[Arquivo] ${inputSource.file.name}`;
+        return;
+    }
+
+    state.currentInputLabel = inputSource.ciphertext;
+}
+
+function buildFilePayload(inputSource, extraFields = {}) {
+    const formData = new FormData();
+    formData.append('file', inputSource.file);
+    formData.append('wordlist', elements.wordlist.value);
+
+    Object.entries(extraFields).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+        }
+    });
+
+    return formData;
+}
+
+function formatFileSize(size) {
+    if (size < 1024) return `${size} B`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 // === Stats Calculator ===
@@ -159,37 +242,48 @@ function detectCharset(text) {
 
 // === Auto-Detect Handler ===
 async function handleAutoDetect() {
-    const ciphertext = state.currentCiphertext.trim();
+    const inputSource = getInputSource();
 
-    if (!ciphertext) {
-        showError('Por favor, insira um ciphertext');
+    if (!inputSource) {
+        showError('Por favor, insira um ciphertext ou selecione um arquivo');
         return;
     }
 
-    const wordlist = elements.wordlist.value
-        .split('\n')
-        .map(w => w.trim())
-        .filter(w => w.length > 0);
+    const wordlist = getWordlist();
 
     state.currentWordlist = wordlist;
+    setCurrentInputLabel(inputSource);
 
-    showLoading('Analisando e detectando algoritmo...');
+    showLoading(
+        inputSource.kind === 'file'
+            ? `Analisando arquivo ${inputSource.file.name}...`
+            : 'Analisando e detectando algoritmo...'
+    );
 
     try {
         // Timeout de 2 minutos
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 120000);
 
-        const response = await fetch(`${API_URL}/auto-detect`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ciphertext,
-                wordlist,
-                max_results: 5
-            }),
-            signal: controller.signal
-        });
+        const requestConfig = inputSource.kind === 'file'
+            ? {
+                method: 'POST',
+                body: buildFilePayload(inputSource, { max_results: 5 }),
+                signal: controller.signal
+            }
+            : {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ciphertext: inputSource.ciphertext,
+                    wordlist,
+                    max_results: 5
+                }),
+                signal: controller.signal
+            };
+
+        const endpoint = inputSource.kind === 'file' ? '/auto-detect-file' : '/auto-detect';
+        const response = await fetch(`${API_URL}${endpoint}`, requestConfig);
 
         clearTimeout(timeoutId);
 
@@ -275,35 +369,46 @@ function selectAlgorithm(algorithmName) {
 }
 
 async function decryptWithAlgorithm(algorithmName) {
-    const ciphertext = state.currentCiphertext.trim();
+    const inputSource = getInputSource();
 
-    if (!ciphertext) {
-        showError('Por favor, insira um ciphertext');
+    if (!inputSource) {
+        showError('Por favor, insira um ciphertext ou selecione um arquivo');
         return;
     }
 
-    const wordlist = elements.wordlist.value
-        .split('\n')
-        .map(w => w.trim())
-        .filter(w => w.length > 0);
+    const wordlist = getWordlist();
+    setCurrentInputLabel(inputSource);
 
-    showLoading(`Decifrando com ${algorithmName}...`);
+    showLoading(
+        inputSource.kind === 'file'
+            ? `Decifrando arquivo ${inputSource.file.name} com ${algorithmName}...`
+            : `Decifrando com ${algorithmName}...`
+    );
 
     try {
         // Timeout de 2 minutos
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 120000);
 
-        const response = await fetch(`${API_URL}/decrypt`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ciphertext,
-                algorithm: algorithmName,
-                wordlist
-            }),
-            signal: controller.signal
-        });
+        const requestConfig = inputSource.kind === 'file'
+            ? {
+                method: 'POST',
+                body: buildFilePayload(inputSource, { algorithm: algorithmName }),
+                signal: controller.signal
+            }
+            : {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ciphertext: inputSource.ciphertext,
+                    algorithm: algorithmName,
+                    wordlist
+                }),
+                signal: controller.signal
+            };
+
+        const endpoint = inputSource.kind === 'file' ? '/decrypt-file' : '/decrypt';
+        const response = await fetch(`${API_URL}${endpoint}`, requestConfig);
 
         clearTimeout(timeoutId);
 
@@ -342,8 +447,8 @@ function displayResults(results) {
         elements.btnExport.disabled = false;
 
         // Add to history
-        if (state.currentCiphertext) {
-            addToHistory(state.currentCiphertext, results);
+        if (state.currentInputLabel) {
+            addToHistory(state.currentInputLabel, results);
         }
     } else {
         elements.btnExport.disabled = true;
@@ -377,6 +482,88 @@ function normalizeApiResults(payload) {
     return [];
 }
 
+function buildPreviewMarkup(preview) {
+    if (!preview || !preview.data_url) {
+        return '';
+    }
+
+    const meta = `
+        <div style="margin-bottom: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">
+            Saida detectada: ${escapeHtml(preview.mime_type || preview.kind || 'binario')} (${formatFileSize(preview.size || 0)})
+        </div>
+    `;
+    const downloadButton = `
+        <a class="copy-btn" href="${preview.data_url}" download="${preview.download_name || 'decoded.bin'}"
+           style="position: static; display: inline-flex; margin-top: 0.75rem; text-decoration: none;">
+            <span>Baixar</span>
+        </a>
+    `;
+
+    if (preview.kind === 'image') {
+        return `
+            <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.03);">
+                ${meta}
+                <img src="${preview.data_url}" alt="Preview descriptografado"
+                     style="display: block; width: 100%; max-height: 320px; object-fit: contain; border-radius: 10px; background: rgba(0,0,0,0.18);">
+                ${downloadButton}
+            </div>
+        `;
+    }
+
+    if (preview.kind === 'audio') {
+        return `
+            <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.03);">
+                ${meta}
+                <audio controls preload="metadata" style="width: 100%;">
+                    <source src="${preview.data_url}" type="${preview.mime_type || 'audio/mpeg'}">
+                    Seu navegador nao suporta audio embutido.
+                </audio>
+                ${downloadButton}
+            </div>
+        `;
+    }
+
+    return `
+        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.03);">
+            ${meta}
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                Arquivo binario pronto para download.
+            </div>
+            ${downloadButton}
+        </div>
+    `;
+}
+
+function buildPlaintextMarkup(result) {
+    const plaintext = escapeHtml(result.plaintext || '');
+    const copyLabel = result.preview ? 'Copiar payload' : 'Copiar';
+    const copyButton = `
+        <button class="copy-btn" onclick="copyToClipboard('${plaintext.replace(/'/g, "\\'")}')"
+                title="Copiar para area de transferencia">
+            <span>${copyLabel}</span>
+        </button>
+    `;
+
+    if (result.preview) {
+        return `
+            <details style="margin-top: 0.75rem;">
+                <summary style="cursor: pointer; color: var(--text-secondary);">Ver payload bruto</summary>
+                <div class="result-plaintext" style="margin-top: 0.75rem;">
+                    ${plaintext}
+                    ${copyButton}
+                </div>
+            </details>
+        `;
+    }
+
+    return `
+        <div class="result-plaintext">
+            ${plaintext}
+            ${copyButton}
+        </div>
+    `;
+}
+
 function createResultCard(result, index) {
     const card = document.createElement('div');
     card.className = 'result-card';
@@ -384,6 +571,8 @@ function createResultCard(result, index) {
 
     const confidence = result.confidence || 0;
     const confidenceColor = confidence > 80 ? '#38ef7d' : confidence > 60 ? '#f39c12' : '#e74c3c';
+    const previewMarkup = buildPreviewMarkup(result.preview);
+    const plaintextMarkup = buildPlaintextMarkup(result);
 
     card.innerHTML = `
         <div class="result-header">
@@ -399,13 +588,8 @@ function createResultCard(result, index) {
                 🔑 Senha: <span style="color: var(--text-primary); font-family: var(--font-mono);">${result.password}</span>
             </div>
         ` : ''}
-        <div class="result-plaintext">
-            ${escapeHtml(result.plaintext)}
-            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(result.plaintext).replace(/'/g, "\\'")}')"
-                    title="Copiar para área de transferência">
-                <span>📋</span> Copiar
-            </button>
-        </div>
+        ${previewMarkup}
+        ${plaintextMarkup}
     `;
 
     return card;
@@ -511,3 +695,4 @@ window.runDemo = function () {
 
 console.log('🎉 DaVinci Decoder UI carregado!');
 console.log('📊 Execute window.runDemo() para testar sem backend');
+

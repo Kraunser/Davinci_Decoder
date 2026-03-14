@@ -273,6 +273,14 @@ class DecoderManager:
             diversified.append(result)
         return diversified
 
+    @staticmethod
+    def _rebalance_confidence(result: DecoderResult, probability: float) -> None:
+        result.confidence = max(result.confidence, round(probability * 100, 1))
+        if result.plaintext.startswith("data:application/octet-stream;base64,"):
+            result.confidence = min(result.confidence, 35.0)
+        elif result.plaintext.startswith("data:image/") or result.plaintext.startswith("data:audio/"):
+            result.confidence = min(result.confidence, 68.0)
+
     def decrypt_auto(
         self,
         ciphertext: str,
@@ -290,8 +298,8 @@ class DecoderManager:
         for decoder, probability in candidates:
             attack_results = decoder.attack(text, wordlist=wordlist or [], max_attempts=None)
             for item in attack_results:
-                # Keep heuristic probability as a floor to stabilize ranking.
-                item.confidence = max(item.confidence, round(probability * 100, 1))
+                # Keep heuristic probability as a floor, but avoid over-ranking binary payloads.
+                self._rebalance_confidence(item, probability)
                 if item.confidence > best_confidence:
                     best_confidence = item.confidence
                 results.append(item)

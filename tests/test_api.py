@@ -6,8 +6,10 @@ Pytest configuration and basic tests
 import pytest
 import sys
 import os
+import io
 import base64
 import hashlib
+import wave
 
 # Add parent directory to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -128,6 +130,92 @@ def test_auto_detect_string_max_results(client):
     data = response.get_json()
     assert data['success'] is True
     assert len(data['results']) <= 2
+
+
+def test_auto_detect_file_upload(client):
+    """Auto-detect should accept text file uploads"""
+    response = client.post(
+        '/api/auto-detect-file',
+        data={
+            'file': (io.BytesIO(b'SGVsbG8gV29ybGQh'), 'cipher.txt'),
+            'wordlist': '',
+            'max_results': '5',
+        },
+        content_type='multipart/form-data',
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['success'] is True
+    assert data['source']['filename'] == 'cipher.txt'
+    assert any('Base64' in r['algorithm'] and r['plaintext'] == 'Hello World!' for r in data['results'])
+
+
+def test_decrypt_file_upload_specific_algorithm(client):
+    """Specific decrypt should accept text file uploads"""
+    response = client.post(
+        '/api/decrypt-file',
+        data={
+            'file': (io.BytesIO(b'SGVsbG8gV29ybGQh'), 'cipher.txt'),
+            'algorithm': 'Base64 Encoding',
+            'wordlist': '',
+        },
+        content_type='multipart/form-data',
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['success'] is True
+    assert data['source']['filename'] == 'cipher.txt'
+    assert len(data['results']) > 0
+    assert data['results'][0]['plaintext'] == 'Hello World!'
+
+
+def test_decrypt_image_preview_payload(client):
+    """Binary image payloads should be exposed as image previews"""
+    png_ciphertext = (
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGD4DwABBAEAAPp0WQAAAABJRU5ErkJggg=='
+    )
+    response = client.post(
+        '/api/decrypt',
+        json={
+            'ciphertext': png_ciphertext,
+            'algorithm': 'Base64 Encoding',
+            'wordlist': [],
+        },
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['success'] is True
+    preview = data['results'][0]['preview']
+    assert data['results'][0]['output_type'] == 'image'
+    assert preview['mime_type'] == 'image/png'
+    assert preview['data_url'].startswith('data:image/png;base64,')
+
+
+def test_decrypt_audio_preview_payload(client):
+    """Binary audio payloads should be exposed as audio previews"""
+    audio_buffer = io.BytesIO()
+    with wave.open(audio_buffer, 'wb') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(8000)
+        wav_file.writeframes(b'\x00\x00' * 16)
+
+    audio_ciphertext = base64.b64encode(audio_buffer.getvalue()).decode('ascii')
+    response = client.post(
+        '/api/decrypt',
+        json={
+            'ciphertext': audio_ciphertext,
+            'algorithm': 'Base64 Encoding',
+            'wordlist': [],
+        },
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['success'] is True
+    preview = data['results'][0]['preview']
+    assert data['results'][0]['output_type'] == 'audio'
+    assert preview['mime_type'] == 'audio/wav'
+    assert preview['data_url'].startswith('data:audio/wav;base64,')
 
 
 # === Decoder Manager Tests ===
